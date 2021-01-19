@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     <Table/>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
 * {
   box-sizing: border-box;
 }
-#app {
+.app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,6 +27,7 @@ export default {
   color: #2c3e50;
   margin-top: 90px;
 }
+/* когда приложение станет больше, стоит вынести button в отдельный компонент */
 button {
   width: 150px;
   height: 30px;

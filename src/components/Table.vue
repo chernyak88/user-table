@@ -2,7 +2,8 @@
   <main class='main'>
     <div class='table'>
       <button class='add-user' @click='showModal'>Добавить</button>
-      <table>
+      <p v-if='users.length === 0'>Добавьте пользователя</p>
+      <table v-else>
         <thead>
           <tr>
             <th @click="sortParam='name'">Имя</th>
@@ -32,7 +33,7 @@
     </div>
     <transition name='modal'>
       <Modal
-        v-if='IsModalShow'
+        v-if='isModalShown'
         @closeModal='closeModal'
         @addUser='addUser'
         :users='users'
@@ -51,9 +52,9 @@ export default {
   },
   data () {
     return {
-      users: [{}],
+      users: [],
       sortParam: null,
-      IsModalShow: false
+      isModalShown: false
     }
   },
   mounted () {
@@ -67,35 +68,27 @@ export default {
   },
   methods: {
     showModal () {
-      this.IsModalShow = true
+      this.isModalShown = true
     },
     closeModal () {
-      this.IsModalShow = false
+      this.isModalShown = false
     },
     addUser (data) {
-      const isEmpty = x => !Object.keys(x).length
-      if (data.name && data.phone && data.phone !== '+7') {
-        if (isEmpty(this.users[0])) {
-          this.users.length = 0
-        }
-        if (data.chief !== null) {
-          this.users[data.chief].subusers.push({
-            name: data.name,
-            phone: data.phone
-          })
-        } else {
-          this.users.push({
-            name: data.name,
-            phone: data.phone,
-            subusers: [],
-            isSubUsersShow: false
-          })
-        }
-        localStorage.setItem('users', JSON.stringify(this.users))
-        this.IsModalShow = false
+      if (data.chief !== null) {
+        this.users[data.chief].subusers.push({
+          name: data.name,
+          phone: data.phone
+        })
       } else {
-        this.$children[0].IsTooltipShow = true
+        this.users.push({
+          name: data.name,
+          phone: data.phone,
+          subusers: [],
+          isSubUsersShow: false
+        })
       }
+      localStorage.setItem('users', JSON.stringify(this.users))
+      this.isModalShown = false
     }
   },
   computed: {

@@ -21,15 +21,15 @@
           autoDetectCountry
         />
       </div>
-      <div v-if='!isEmpty'>
+      <div v-if='users.length !== 0'>
         <label for='chief'>Начальник</label>
         <select v-model='chief' name='chief'>
-          <option disabled selected>Выберите из списка</option>
+          <option disabled selected value=null>Выберите из списка</option>
           <option v-for='(user, index) in users' :key='index' :value='index'>{{ user.name }}</option>
         </select>
       </div>
       <button class='save' type='submit' @click='addUser'>Сохранить</button>
-      <div class="tooltip" v-if="IsTooltipShow">
+      <div class="tooltip" v-if="isTooltipShown">
         Поля "Имя" и "Телефон" должны быть заполнены
       </div>
     </form>
@@ -37,6 +37,9 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+import PhoneMaskInput from 'vue-phone-mask-input'
+
 export default {
   name: 'Modal',
   data () {
@@ -44,20 +47,11 @@ export default {
       name: null,
       phone: null,
       chief: null,
-      isEmpty: null,
-      IsTooltipShow: false
+      isTooltipShown: false
     }
   },
   props: {
     users: Array
-  },
-  mounted () {
-    const isEmpty = x => !Object.keys(x).length
-    if (isEmpty(this.users[0])) {
-      this.isEmpty = true
-    } else {
-      this.isEmpty = false
-    }
   },
   methods: {
     closeModal () {
@@ -65,6 +59,10 @@ export default {
     },
     addUser (event) {
       event.preventDefault()
+      if (!this.name || !this.phone || this.phone === '+7') {
+        this.isTooltipShown = true
+        return
+      }
       this.$emit('addUser', {
         name: this.name,
         phone: this.phone,
