@@ -1,6 +1,6 @@
 # vue-test
 
-> A Vue.js project
+> https://chernyak88.github.io/user-table/
 
 ## Build Setup
 
