@@ -6,29 +6,31 @@
       <table v-else>
         <thead>
           <tr>
-            <th @click="sortParam='name'">Имя</th>
-            <th @click="sortParam='phone'">Телефон</th>
+            <th @click='isSortedName = !isSortedName'>Имя</th>
+            <th @click='isSortedPhone = !isSortedPhone'>Телефон</th>
           </tr>
         </thead>
-        <tbody v-for='(user, index) in sortedList' :key='index'>
-          <tr>
-            <td class='user-name'>
-              <span
-                v-if='user.subusers && user.subusers.length > 0'
-                @click='user.isSubUsersShow = !user.isSubUsersShow'
-                class='show-subuser'>
-              </span>
-              {{ user.name }}
-            </td>
-            <td>{{ user.phone }}</td>
-          </tr>
-          <template v-if='user.isSubUsersShow'>
-            <tr v-for='(subuser, index) in user.subusers' :key='index' class='subuser'>
-              <td class='subuser-name'>{{ subuser.name }}</td>
-              <td>{{ subuser.phone }}</td>
-          </tr>
-          </template>
-        </tbody>
+        <template>
+          <tbody v-for='(user, index) in this.users' :key='index'>
+            <tr>
+              <td class='user-name'>
+                <span
+                  v-if='user.subusers && user.subusers.length > 0'
+                  @click='user.isSubUsersShow = !user.isSubUsersShow'
+                  class='show-subuser'>
+                </span>
+                {{ user.name }}
+              </td>
+              <td>{{ user.phone }}</td>
+            </tr>
+            <template v-if='user.isSubUsersShow'>
+              <tr v-for='(subuser, index) in user.subusers' :key='index' class='subuser'>
+                <td class='subuser-name'>{{ subuser.name }}</td>
+                <td>{{ subuser.phone }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </template>
       </table>
     </div>
     <transition name='modal'>
@@ -53,7 +55,8 @@ export default {
   data () {
     return {
       users: [],
-      sortParam: null,
+      isSortedName: false,
+      isSortedPhone: false,
       isModalShown: false
     }
   },
@@ -91,12 +94,29 @@ export default {
       this.isModalShown = false
     }
   },
-  computed: {
-    sortedList () {
-      switch (this.sortParam) {
-        case 'name': return this.users.slice().sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1)
-        case 'phone': return this.users.slice().sort((a, b) => (a.phone > b.phone) ? 1 : -1)
-        default: return this.users
+  watch: {
+    isSortedName: function () {
+      const sortFunc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.isSortedName) {
+          this.users.sort(sortFunc)
+          this.users[i].subusers.sort(sortFunc)
+        } else {
+          this.users.sort(sortFunc).reverse()
+          this.users[i].subusers.sort(sortFunc).reverse()
+        }
+      }
+    },
+    isSortedPhone: function () {
+      const sortFunc = (a, b) => (a.phone > b.phone) ? 1 : -1
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.isSortedPhone) {
+          this.users.sort(sortFunc)
+          this.users[i].subusers.sort(sortFunc)
+        } else {
+          this.users.sort(sortFunc).reverse()
+          this.users[i].subusers.sort(sortFunc).reverse()
+        }
       }
     }
   }
