@@ -97,24 +97,28 @@ export default {
   watch: {
     isSortedName: function () {
       const sortFunc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      for (let i = 0; i < this.users.length; i++) {
-        if (this.isSortedName) {
-          this.users.sort(sortFunc)
+      if (this.isSortedName) {
+        this.users.sort(sortFunc)
+        for (let i = 0; i < this.users.length; i++) {
           this.users[i].subusers.sort(sortFunc)
-        } else {
-          this.users.sort(sortFunc).reverse()
+        }
+      } else {
+        this.users.sort(sortFunc).reverse()
+        for (let i = 0; i < this.users.length; i++) {
           this.users[i].subusers.sort(sortFunc).reverse()
         }
       }
     },
     isSortedPhone: function () {
       const sortFunc = (a, b) => (a.phone > b.phone) ? 1 : -1
-      for (let i = 0; i < this.users.length; i++) {
-        if (this.isSortedPhone) {
-          this.users.sort(sortFunc)
+      if (this.isSortedPhone) {
+        this.users.sort(sortFunc)
+        for (let i = 0; i < this.users.length; i++) {
           this.users[i].subusers.sort(sortFunc)
-        } else {
-          this.users.sort(sortFunc).reverse()
+        }
+      } else {
+        this.users.sort(sortFunc).reverse()
+        for (let i = 0; i < this.users.length; i++) {
           this.users[i].subusers.sort(sortFunc).reverse()
         }
       }
